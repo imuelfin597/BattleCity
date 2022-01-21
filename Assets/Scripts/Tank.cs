@@ -12,8 +12,11 @@ public class Tank : MonoBehaviour
     public float fireCd = 0.5f;
     public Bullet pfBullet;
     public GameObject pfExplosion;
+    // 0 idle  1 moving  2 fire  3 die
+    public AudioClip[] audioClips;
     private Rigidbody2D rb = null;
     private Animator animtr = null;
+    private AudioSource audioSrc = null;
     private Vector2 localDir = Vector2.up;
     private Vector2 worldDir = Vector2.up;
     private bool isMoving = false;
@@ -23,6 +26,7 @@ public class Tank : MonoBehaviour
     protected virtual void Start() {
         rb = GetComponent<Rigidbody2D>();
         animtr = GetComponent<Animator>();
+        audioSrc = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -43,8 +47,15 @@ public class Tank : MonoBehaviour
     public void Move(float x, float y) {
         y = x == 0 ? y : 0;
         isMoving = x != 0 || y != 0;
-        if (isMoving)
+        if (isMoving) {
             localDir.Set(x, y);
+            audioSrc.clip = audioClips[1];
+        } else {
+            audioSrc.clip = audioClips[0];
+        }
+        if (!audioSrc.isPlaying) {
+            audioSrc.Play();
+        }
 
         // 创建俯视角的变换矩阵矩阵
         float angle = Vector3.SignedAngle(Vector3.right, Vector3.ProjectOnPlane(transform.right, Vector3.forward), Vector3.forward);
@@ -63,6 +74,8 @@ public class Tank : MonoBehaviour
         bullet.SetDirection(worldDir);
         bullet.SetIsPlayer(isPlayer);
 
+        AudioManager.Instance.PlayClip(audioClips[2]);
+
         fireCdTimer = fireCd;
         return true;
     }
@@ -80,6 +93,7 @@ public class Tank : MonoBehaviour
     }
 
     protected virtual void Die() {
+        AudioManager.Instance.PlayClip(audioClips[3]);
         Destroy(gameObject);
         Instantiate(pfExplosion, transform.position, transform.rotation)
             .GetComponent<Animator>().SetBool("isLarge", true);

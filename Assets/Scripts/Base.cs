@@ -26,6 +26,7 @@ public class Base : MonoBehaviour
         Instantiate(pfExplosion, transform.position, transform.rotation)
             .GetComponent<Animator>().SetBool("isLarge", true);
         GetComponent<SpriteRenderer>().sprite = sprites[1];
+        AudioManager.Instance.PlayClip(Resources.Load<AudioClip>("AudioClips/HeartDamage"));
         GameManager.Instance.GameOver();
     }
 }

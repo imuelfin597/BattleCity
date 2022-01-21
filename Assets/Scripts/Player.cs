@@ -16,6 +16,7 @@ public class Player : Tank
     protected override void Start() {
         base.Start();
 
+        AudioManager.Instance.SetAudioListenerTarget(gameObject);
         GenerateShield();
     }
 
@@ -43,6 +44,8 @@ public class Player : Tank
     }
 
     protected override void Die() {
+        AudioManager.Instance.SetAudioListenerTarget(Camera.main.gameObject);
+
         base.Die();
         GameManager.Instance.PlayerDied();
     }

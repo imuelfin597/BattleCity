@@ -60,6 +60,7 @@ public class GameManager : GenericSingleton<GameManager>
     private void Start() {
         MapGenerator.Instance.GenerateMap();
         RequestRespawnPlayer();
+        AudioManager.Instance.PlayClip(Resources.Load<AudioClip>("AudioClips/Start"));
     }
 
     private void Update() {

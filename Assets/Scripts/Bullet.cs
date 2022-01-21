@@ -48,9 +48,10 @@ public class Bullet : MonoBehaviour
     }
 
     public void Die() {
-        Destroy(gameObject);
+        AudioManager.Instance.PlayClip(Resources.Load<AudioClip>("AudioClips/Hit"));
         Instantiate(pfExplosion, transform.position, transform.rotation)
             .GetComponent<Animator>().SetBool("isLarge", false);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
