@@ -22,13 +22,18 @@ public class RotateCamAround : MonoBehaviour
             transform.position = targetPosition + offset;
         }
 
-        if (!isRotating && Input.GetKeyDown(KeyCode.Q))
-            StartCoroutine(RotateAround(-45f, 0.2f));
+        if (Input.GetKeyDown(KeyCode.Q))
+            RotateAround(-45f, 0.2f);
         else if (!isRotating && Input.GetKeyDown(KeyCode.E))
-            StartCoroutine(RotateAround(45f, 0.2f));
+            RotateAround(45f, 0.2f);
     }
 
-    IEnumerator RotateAround(float angle, float time) {
+    public void RotateAround(float angle, float time) {
+        if (isRotating || !gameObject.activeInHierarchy) return;
+        StartCoroutine(RotateAroundStep(angle, time));
+    }
+
+    private IEnumerator RotateAroundStep(float angle, float time) {
         float count = 60 * time;
         float dPhi = angle / count;
         isRotating = true;

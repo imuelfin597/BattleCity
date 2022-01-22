@@ -31,9 +31,13 @@ public class Player : Tank
 
     private void HandleInput() {
         // 移动输入
-        Move(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        if (moveInput == Vector2.zero) {
+            moveInput = GameManager.Instance.joystick.Direction;
+        }
+        Move(moveInput.x, moveInput.y);
         // 开火输入
-        if (Input.GetAxisRaw("Fire1") == 1) {
+        if (Input.GetKey(KeyCode.Space)) {
             Fire(true);
         }
     }

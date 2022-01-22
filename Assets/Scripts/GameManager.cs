@@ -37,6 +37,8 @@ public class GameManager : GenericSingleton<GameManager>
     public Text textDefeatNum;
     public Text textLifeNum;
     public Image imgGameOver;
+    public Joystick joystick;
+    public GameObject dPadX;
     private Player playerInstance;
     private bool isPerspective = false;
     private const float respawnPlayerTime = 1f;
@@ -97,6 +99,7 @@ public class GameManager : GenericSingleton<GameManager>
             isPerspective = perspective.Value;
             pCamera.gameObject.SetActive(perspective.Value);
             oCamera.gameObject.SetActive(!perspective.Value);
+            dPadX.SetActive(perspective.Value);
         }
     }
 
@@ -192,6 +195,24 @@ public class GameManager : GenericSingleton<GameManager>
         for (int i = 0; times == 0 ? true : i < times; i++) {
             yield return instruction;
             func();
+        }
+    }
+
+    public void OnButtonClick(string msg) {
+        if (msg == "BtnA") {
+            if (playerInstance != null) {
+                playerInstance.Fire();
+            }
+        } else if (msg == "BtnB") {
+            SwitchPerspective();
+        } else if (msg == "BtnLeft") {
+            if (pCamera.TryGetComponent<RotateCamAround>(out RotateCamAround rotateCamAround)) {
+                rotateCamAround.RotateAround(-45f, 0.2f);
+            }
+        } else if (msg == "BtnRight") {
+            if (pCamera.TryGetComponent<RotateCamAround>(out RotateCamAround rotateCamAround)) {
+                rotateCamAround.RotateAround(45f, 0.2f);
+            }
         }
     }
 }
